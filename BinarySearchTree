@@ -1,0 +1,26 @@
+import java.util.*;
+class BinarySearchTree {
+    private tNode root;
+    
+    public BinarySearchTree() {
+        root = null;
+    }
+    
+    // Insert a value into the BST
+    public void insert(int value) {
+        root = insertRec(root, value);
+    }
+    
+    private tNode insertRec(tNode node, int value) {
+        if (node == null) {
+            return new tNode(value);
+        }
+        
+        if (value < node.data) {
+            node.left = insertRec(node.left, value);
+        } else if (value > node.data) {
+            node.right = insertRec(node.right, value);
+        }
+        
+        return node;
+    }
