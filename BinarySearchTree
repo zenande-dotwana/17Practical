@@ -88,4 +88,45 @@ class BinarySearchTree {
         
         return node;
     }
-   
+    
+   private tNode findMin(tNode node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+    
+    private tNode deleteRec(tNode node, int value) {
+        if (node == null) {
+            return null;
+        }
+        
+        if (value < node.data) {
+            node.left = deleteRec(node.left, value);
+        } else if (value > node.data) {
+            node.right = deleteRec(node.right, value);
+        } else {
+            node = deleteNode(node);
+        }
+        
+        return node;
+    }
+    
+    // Build perfect BST using divide and conquer approach
+    public void buildPerfectBST(int n) {
+        int maxNumber = (int)(Math.pow(2, n) - 1);
+        List<Integer> numbers = new ArrayList<>();
+        
+        // Create list of numbers from 1 to maxNumber
+        for (int i = 1; i <= maxNumber; i++) {
+            numbers.add(i);
+        }
+        
+        // Build tree using recursive middle insertion
+        root = buildBSTFromSorted(numbers, 0, numbers.size() - 1);
+    }
+    
+    private tNode buildBSTFromSorted(List<Integer> numbers, int start, int end) {
+        if (start > end) {
+            return null;
+        }
