@@ -24,3 +24,42 @@ class BinarySearchTree {
         
         return node;
     }
+
+    // Check if tree is a valid BST
+    public boolean isBST() {
+        return isBSTRec(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    
+    private boolean isBSTRec(tNode node, int min, int max) {
+        if (node == null) {
+            return true;
+        }
+        
+        if (node.data < min || node.data > max) {
+            return false;
+        }
+        
+        return isBSTRec(node.left, min, node.data - 1) &&
+               isBSTRec(node.right, node.data + 1, max);
+    }
+    
+    // Delete all nodes with even numbers
+    public void deleteEvens() {
+        root = deleteEvensRec(root);
+    }
+    
+    private tNode deleteEvensRec(tNode node) {
+        if (node == null) {
+            return null;
+        }
+        
+        node.left = deleteEvensRec(node.left);
+        node.right = deleteEvensRec(node.right);
+        
+        // If current node's data is even, delete it
+        if (node.data % 2 == 0) {
+            return deleteNode(node);
+        }
+        
+        return node;
+    }
