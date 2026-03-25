@@ -1,0 +1,86 @@
+import java.util.*;
+
+public class tryBST {
+    
+    public static void main(String[] args) {
+        // Test with small n first (n <= 7)
+        System.out.println("Testing with small n values...");
+        for (int n = 1; n <= 7; n++) {
+            testWithN(n);
+        }
+        
+        // Run the main timing experiment with n = 20
+        System.out.println("\n" + "=".repeat(80));
+        System.out.println("Main Experiment with n = 20");
+        System.out.println("=".repeat(80));
+        
+        int n = 20;
+        int repetitions = 30;
+        
+        // Calculate theoretical number of nodes: 2^n - 1
+        long numberOfKeys = (long)(Math.pow(2, n) - 1);
+        
+        System.out.println("Number of keys (2^" + n + " - 1): " + numberOfKeys);
+        System.out.println("Running " + repetitions + " repetitions...\n");
+        
+        double[] populateTimes = new double[repetitions];
+        double[] deleteTimes = new double[repetitions];
+        
+        for (int i = 0; i < repetitions; i++) {
+            // Time populate operation
+            BinarySearchTree bst = new BinarySearchTree();
+            long startPopulate = System.nanoTime();
+            bst.buildPerfectBST(n);
+            long endPopulate = System.nanoTime();
+            populateTimes[i] = (endPopulate - startPopulate) / 1_000_000.0; // Convert to ms
+            
+            // Verify BST property
+            if (!bst.isBST()) {
+                System.out.println("Warning: Tree is not a valid BST at repetition " + (i + 1));
+            }
+            
+            // Time delete operation
+            long startDelete = System.nanoTime();
+            bst.deleteEvens();
+            long endDelete = System.nanoTime();
+            deleteTimes[i] = (endDelete - startDelete) / 1_000_000.0; // Convert to ms
+            
+            // Progress indicator
+            if ((i + 1) % 10 == 0) {
+                System.out.println("Completed " + (i + 1) + " repetitions...");
+            }
+        }
+        
+        // Calculate statistics
+        double avgPopulate = calculateAverage(populateTimes);
+        double stdDevPopulate = calculateStdDev(populateTimes, avgPopulate);
+        double avgDelete = calculateAverage(deleteTimes);
+        double stdDevDelete = calculateStdDev(deleteTimes, avgDelete);
+        
+        // Display results in table format
+        System.out.println("\n" + "=".repeat(80));
+        System.out.println("FINAL RESULTS");
+        System.out.println("=".repeat(80));
+        System.out.printf("%-25s %-25s %-25s%n", "Method", "Number of keys n", "Average time in ms");
+        System.out.printf("%-25s %-25d %-25.2f%n", "Populate tree", n, avgPopulate);
+        System.out.printf("%-25s %-25d %-25.2f%n", "Remove evens from the tree", n, avgDelete);
+        
+        System.out.println("\n" + "=".repeat(80));
+        System.out.println("DETAILED STATISTICS");
+        System.out.println("=".repeat(80));
+        System.out.printf("%-25s %-25s %-25s%n", "Method", "Average time in ms", "Standard Deviation");
+        System.out.printf("%-25s %-25.2f %-25.2f%n", "Populate tree", avgPopulate, stdDevPopulate);
+        System.out.printf("%-25s %-25.2f %-25.2f%n", "Remove evens from the tree", avgDelete, stdDevDelete);
+        
+        // Check if times are sufficient (should be > 1000ms for n=20)
+        if (avgPopulate < 1000 && avgDelete < 1000) {
+            System.out.println("\nNote: Times are less than 1000ms. For larger times, increase n.");
+        }
+        
+        // Verify final tree size (should have only odd numbers)
+        BinarySearchTree finalBst = new BinarySearchTree();
+        finalBst.buildPerfectBST(n);
+        int sizeBefore = finalBst.getSize();
+        finalBst.deleteEvens();
+        int sizeAfter = finalBst.getSize();
+        int expectedSize = (int)(Math.pow(2, n - 1)); // Half of the nodes (odd numbers only)
