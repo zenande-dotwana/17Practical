@@ -23,8 +23,9 @@ class BinarySearchTree {
         }
         
         return node;
-    }
-
+        }
+        
+    
     // Check if tree is a valid BST
     public boolean isBST() {
         return isBSTRec(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -63,3 +64,28 @@ class BinarySearchTree {
         
         return node;
     }
+    
+    private tNode deleteNode(tNode node) {
+        // Case 1: No children
+        if (node.left == null && node.right == null) {
+            return null;
+        }
+        
+        // Case 2: Only right child
+        if (node.left == null) {
+            return node.right;
+        }
+        
+        // Case 3: Only left child
+        if (node.right == null) {
+            return node.left;
+        }
+        
+        // Case 4: Two children - find inorder successor
+        tNode successor = findMin(node.right);
+        node.data = successor.data;
+        node.right = deleteRec(node.right, successor.data);
+        
+        return node;
+    }
+   
