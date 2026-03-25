@@ -130,3 +130,44 @@ class BinarySearchTree {
         if (start > end) {
             return null;
         }
+
+        int mid = start + (end - start) / 2;
+        tNode node = new tNode(numbers.get(mid));
+        
+        node.left = buildBSTFromSorted(numbers, start, mid - 1);
+        node.right = buildBSTFromSorted(numbers, mid + 1, end);
+        
+        return node;
+    }
+    
+    // Get number of nodes in tree
+    public int getSize() {
+        return getSizeRec(root);
+    }
+    
+    private int getSizeRec(tNode node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + getSizeRec(node.left) + getSizeRec(node.right);
+    }
+    
+    // For debugging - inorder traversal
+    public void inorder() {
+        inorderRec(root);
+        System.out.println();
+    }
+    
+    private void inorderRec(tNode node) {
+        if (node != null) {
+            inorderRec(node.left);
+            System.out.print(node.data + " ");
+            inorderRec(node.right);
+        }
+    }
+    
+    // Get root for testing
+    public tNode getRoot() {
+        return root;
+    }
+}     
