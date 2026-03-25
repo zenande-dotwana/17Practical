@@ -84,3 +84,62 @@ public class tryBST {
         finalBst.deleteEvens();
         int sizeAfter = finalBst.getSize();
         int expectedSize = (int)(Math.pow(2, n - 1)); // Half of the nodes (odd numbers only)
+
+       System.out.println("\n" + "=".repeat(80));
+        System.out.println("VERIFICATION");
+        System.out.println("=".repeat(80));
+        System.out.println("Nodes before deletion: " + sizeBefore);
+        System.out.println("Nodes after deletion: " + sizeAfter);
+        System.out.println("Expected nodes (odd numbers only): " + expectedSize);
+        
+        if (sizeAfter == expectedSize) {
+            System.out.println("✓ Deletion verification passed!");
+        } else {
+            System.out.println("✗ Deletion verification failed!");
+        }
+    }
+    
+    private static void testWithN(int n) {
+        BinarySearchTree bst = new BinarySearchTree();
+        long maxNumber = (long)(Math.pow(2, n) - 1);
+        
+        System.out.println("\nTesting with n = " + n + " (2^" + n + " - 1 = " + maxNumber + " nodes)");
+        
+        long startTime = System.nanoTime();
+        bst.buildPerfectBST(n);
+        long endTime = System.nanoTime();
+        
+        double timeMs = (endTime - startTime) / 1_000_000.0;
+        
+        boolean isValid = bst.isBST();
+        int size = bst.getSize();
+        
+        System.out.println("  Tree built in: " + String.format("%.3f", timeMs) + " ms");
+        System.out.println("  Valid BST: " + isValid);
+        System.out.println("  Tree size: " + size);
+        System.out.println("  Expected size: " + maxNumber);
+        
+        if (isValid && size == maxNumber) {
+            System.out.println("  ✓ Test passed!");
+        } else {
+            System.out.println("  ✗ Test failed!");
+        }
+    }
+    
+    private static double calculateAverage(double[] values) {
+        double sum = 0;
+        for (double val : values) {
+            sum += val;
+        }
+        return sum / values.length;
+    }
+    
+    private static double calculateStdDev(double[] values, double mean) {
+        double sumSquaredDiff = 0;
+        for (double val : values) {
+            sumSquaredDiff += Math.pow(val - mean, 2);
+        }
+        return Math.sqrt(sumSquaredDiff / values.length);
+    }
+}
+        
